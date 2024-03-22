@@ -1,4 +1,4 @@
-# AKS Playground
+# AKS with Calico and CNI Overlay via Bicep
 
 This repository contains Bicep templates for deploying an Azure Kubernetes Service (AKS) cluster.
 
