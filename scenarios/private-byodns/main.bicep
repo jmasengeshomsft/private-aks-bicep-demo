@@ -149,8 +149,8 @@ module aksCluster '../../modules/aks/aks.bicep' = {
    privateDNSZone: pvtdnsAKSZone.id
    enableVnetIntegration: enableVnetIntegration
    //apiServerSubnetId: apiServerSubnetId
-    skuTier: skuTier
-    tags: tags
+   skuTier: skuTier
+   tags: tags
   }
 }
 
