@@ -1,0 +1,109 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "eastus"
+        },
+        "resourceGroupName": {
+            "value": "myResourceGroup"
+        },
+        "vnetResourceGroupName": {
+            "value": "myVnetResourceGroup"
+        },
+        "vnetName": {
+            "value": "myVnet"
+        },
+        "subnetName": {
+            "value": "mySubnet"
+        },
+        "networkPlugin": {
+            "value": "azure"
+        },
+        "networkPluginMode": {
+            "value": "overlay"
+        },
+        "networkPolicy": {
+            "value": "calico"
+        },
+        "outboundType": {
+            "value": "userDefinedRouting"
+        },
+        "serviceCidr": {
+            "value": "10.240.0.0/16"
+        },
+        "dnsServiceIP": {
+            "value": "10.240.0.10"
+        },
+        "skuTier": {
+            "value": "Standard"
+        },
+        "podCidr": {
+            "value": "10.248.0.0/16"
+        },
+        "apiServerSubnetName": {
+            "value": "myApiServerSubnet"
+        },
+        "kubernetesVersion": {
+            "value": "1.21.2"
+        },
+        "availabilityZones": {
+            "value": [
+                "1",
+                "2",
+                "3"
+            ]
+        },
+        "lawResourceGroupName": {
+            "value": "myLawResourceGroup"
+        },
+        "lawName": {
+            "value": "myLogAnalyticsWorkspace"
+        },
+        "userNodePoolSettings": {
+            "value": {
+                "minCount": 2,
+                "maxCount": 10,
+                "nodeCount": 3,
+                "poolVMSize": "Standard_D2s_v3"
+            }
+        },
+        "systemNodePoolSettings": {
+            "value": {
+                "minCount": 2,
+                "maxCount": 5,
+                "nodeCount": 2,
+                "poolVMSize": "Standard_D2s_v3"
+            }
+        },
+        "tags": {
+            "value": {
+                "Environment": "Development"
+            }
+        },
+        "aksadminaccessprincipalId": {
+            "value": "00000000-0000-0000-0000-000000000000"
+        },
+        "byoDns": {
+            "value": true
+        },
+        "enableVnetIntegration": {
+            "value": false
+        },
+        "dnsResourceGroupName": {
+            "value": "myDnsResourceGroup"
+        },
+        "privateDNSZoneAKSName": {
+            "value": "privatelink.eastus.azmk8s.io"
+        },
+        "existingIdentityName": {
+            "value": "myIdentity"
+        },
+        "identityResourceGroupName": {
+            "value": "myIdentityResourceGroup"
+        },
+        "identitySubscriptionId": {
+            "value": "00000000-0000-0000-0000-000000000000"
+        }
+    }
+}
