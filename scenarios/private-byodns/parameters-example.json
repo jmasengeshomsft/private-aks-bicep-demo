@@ -45,7 +45,7 @@
             "value": "myApiServerSubnet"
         },
         "kubernetesVersion": {
-            "value": "1.21.2"
+            "value": "1.30.0"
         },
         "availabilityZones": {
             "value": [
@@ -104,6 +104,15 @@
         },
         "identitySubscriptionId": {
             "value": "00000000-0000-0000-0000-000000000000"
+        },
+        "advancedNetworkingEnabled": {
+            "value": false
+        },
+        "webAppRoutingEnabled": {
+            "value": false
+        },
+        "webAppRoutingIngressType": {
+            "value": "Internal"
         }
     }
 }

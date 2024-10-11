@@ -3,19 +3,19 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
-            "value": "eastus"
+            "value": "centralus"
         },
         "resourceGroupName": {
-            "value": "myResourceGroup"
+            "value": "aks-playground-centralus-eshop-dev-rg"
         },
         "vnetResourceGroupName": {
-            "value": "myVnetResourceGroup"
+            "value": "aks-playground-centralus-eshop-dev-rg"
         },
         "vnetName": {
-            "value": "myVnet"
+            "value": "aks-playground-centralus-eshop-dev-vnet"
         },
         "subnetName": {
-            "value": "mySubnet"
+            "value": "sn-aks"
         },
         "networkPlugin": {
             "value": "azure"
@@ -45,7 +45,7 @@
             "value": "myApiServerSubnet"
         },
         "kubernetesVersion": {
-            "value": "1.21.2"
+            "value": "1.30.0"
         },
         "availabilityZones": {
             "value": [
@@ -55,10 +55,10 @@
             ]
         },
         "lawResourceGroupName": {
-            "value": "myLawResourceGroup"
+            "value": "aks-playground-centralus-hub-rg"
         },
         "lawName": {
-            "value": "myLogAnalyticsWorkspace"
+            "value": "aks-playground-centralus-hub-law"
         },
         "userNodePoolSettings": {
             "value": {
@@ -82,7 +82,7 @@
             }
         },
         "aksadminaccessprincipalId": {
-            "value": "00000000-0000-0000-0000-000000000000"
+            "value": "9e8466ef-864d-486a-b8ba-457b492746fd"
         },
         "byoDns": {
             "value": true
@@ -91,19 +91,28 @@
             "value": false
         },
         "dnsResourceGroupName": {
-            "value": "myDnsResourceGroup"
+            "value": "aks-playground-centralus-hub-rg"
         },
         "privateDNSZoneAKSName": {
-            "value": "privatelink.eastus.azmk8s.io"
+            "value": "privatelink.centralus.azmk8s.io"
         },
         "existingIdentityName": {
-            "value": "myIdentity"
+            "value": "aks-clusters-identity"
         },
         "identityResourceGroupName": {
-            "value": "myIdentityResourceGroup"
+            "value": "aks-playground-centralus-eshop-dev-rg"
         },
         "identitySubscriptionId": {
-            "value": "00000000-0000-0000-0000-000000000000"
+            "value": "38bfc61d-d89a-4df6-b8fb-0c14568dcf29"
+        },
+        "advancedNetworkingEnabled": {
+            "value": false
+        },
+        "webAppRoutingEnabled" :  {
+            "value": false
+        },
+        "webAppRoutingIngressType" : {
+            "value": "Internal"
         }
     }
 }

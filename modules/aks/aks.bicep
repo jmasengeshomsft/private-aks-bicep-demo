@@ -13,6 +13,13 @@ param privateDNSZone string = 'system'
 param byoDns bool = true
 param enableVnetIntegration bool = false
 param apiServerSubnetId string = ''
+param advancedNetworkingEnabled bool = false
+param webAppRoutingEnabled bool = false
+@allowed([
+  'Internal'
+  'External'
+])
+param webAppRoutingIngressType string = 'Internal'
 
 param maxNodeCount int
 param minNodeCount int
@@ -79,7 +86,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-06-02-previ
       podCidr: podCidr
       advancedNetworking: {
         observability: {
-          enabled: true
+          enabled: advancedNetworkingEnabled
         }
       }
     }:{
@@ -91,7 +98,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-06-02-previ
       podCidr: '10.248.0.0/16'
       advancedNetworking: {
         observability: {
-          enabled: true
+          enabled: advancedNetworkingEnabled
         }
       }
     }
@@ -146,9 +153,9 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-06-02-previ
     ingressProfile: {
       webAppRouting: {
         dnsZoneResourceIds: []
-        enabled: true
+        enabled: webAppRoutingEnabled
         nginx: {
-          defaultIngressControllerType: 'Internal'
+          defaultIngressControllerType: webAppRoutingIngressType
         }
       }
     }
