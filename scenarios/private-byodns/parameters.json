@@ -82,7 +82,7 @@
             }
         },
         "aksadminaccessprincipalId": {
-            "value": "9e8466ef-864d-486a-b8ba-457b492746fd"
+            "value": "00000000-0000-0000-0000-000000000000"
         },
         "byoDns": {
             "value": true
@@ -103,7 +103,7 @@
             "value": "aks-playground-centralus-eshop-dev-rg"
         },
         "identitySubscriptionId": {
-            "value": "38bfc61d-d89a-4df6-b8fb-0c14568dcf29"
+            "value": "00000000-0000-0000-0000-000000000000"
         },
         "advancedNetworkingEnabled": {
             "value": false
