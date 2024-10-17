@@ -10,16 +10,7 @@ param availabilityZones array = [
 ]
 param identity object = {}
 param privateDNSZone string = 'system'
-param byoDns bool = true
-param enableVnetIntegration bool = false
-param apiServerSubnetId string = ''
-param advancedNetworkingEnabled bool = false
-param webAppRoutingEnabled bool = false
-@allowed([
-  'Internal'
-  'External'
-])
-param webAppRoutingIngressType string = 'Internal'
+param byoDns bool = false
 
 param maxNodeCount int
 param minNodeCount int
@@ -84,11 +75,6 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-06-02-previ
       serviceCidr: serviceCidr
       networkPolicy: networkPolicy
       podCidr: podCidr
-      advancedNetworking: {
-        observability: {
-          enabled: advancedNetworkingEnabled
-        }
-      }
     }:{
       networkPlugin: 'kubenet'
       outboundType: outboundType
@@ -96,18 +82,11 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-06-02-previ
       serviceCidr: serviceCidr
       networkPolicy: networkPolicy
       podCidr: '10.248.0.0/16'
-      advancedNetworking: {
-        observability: {
-          enabled: advancedNetworkingEnabled
-        }
-      }
     }
     apiServerAccessProfile: {
       enablePrivateCluster: true
       enablePrivateClusterPublicFQDN: false
       privateDNSZone: byoDns ?  privateDNSZone : 'system'
-      enableVnetIntegration: enableVnetIntegration
-      subnetId: enableVnetIntegration ? apiServerSubnetId : null
     }
     enableRBAC: true
     // fqdnSubdomain: 'dev'
@@ -145,50 +124,6 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-06-02-previ
     oidcIssuerProfile: {
       enabled: true
     }
-
-    aiToolchainOperatorProfile: {
-      enabled: false
-    }
-
-    ingressProfile: {
-      webAppRouting: {
-        dnsZoneResourceIds: []
-        enabled: webAppRoutingEnabled
-        nginx: {
-          defaultIngressControllerType: webAppRoutingIngressType
-        }
-      }
-    }
-
-    // azureMonitorProfile: {
-    //   appMonitoring: {
-    //     autoInstrumentation: {
-    //       enabled: true
-    //     }
-    //     openTelemetryLogs: {
-    //       enabled: true
-    //       port: 28331
-    //     }
-    //     openTelemetryMetrics: {
-    //       enabled: true
-    //       port: 28333
-    //     }
-    //   }
-    //   containerInsights: {
-    //     disableCustomMetrics: false
-    //     disablePrometheusMetricsScraping: false
-    //     enabled: true
-    //     logAnalyticsWorkspaceResourceId: logworkspaceid
-    //     syslogPort: 28330
-    //   }
-    //   metrics: {
-    //     enabled: true
-    //     // kubeStateMetrics: {
-    //     //   metricAnnotationsAllowList: 'string'
-    //     //   metricLabelsAllowlist: 'string'
-    //     // }
-    //   }
-    // }
   }
   tags: tags
   sku: {
@@ -258,21 +193,6 @@ resource aksDiatgnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-0
     workspaceId: logworkspaceid
   }
 }
-
-//enable flux
-// resource flux 'Microsoft.KubernetesConfiguration/extensions@2022-11-01' = {
-//   name: '${clusterName}-flux'
-//   scope: aksCluster
-//   properties: {
-//     extensionType: 'microsoft.flux'
-//     scope: {
-//       cluster: {
-//         releaseNamespace: 'flux-system'
-//       }
-//     }
-//     autoUpgradeMinorVersion: true
-//   }
-// }
 
 output kubeletIdentity string = aksCluster.properties.identityProfile.kubeletidentity.objectId
 output keyvaultaddonIdentity string = aksCluster.properties.addonProfiles.azureKeyvaultSecretsProvider.identity.objectId

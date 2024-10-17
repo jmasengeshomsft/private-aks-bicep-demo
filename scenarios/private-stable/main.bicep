@@ -1,11 +1,30 @@
 targetScope = 'resourceGroup'
 
-param rgName string
-param lawRgName string
+param resourceGroupName string
 param tags object
-param akslaWorkspaceName string
+
+//monitoring
+param lawResourceGroupName string = ''
+param lawName string
+
+//Networking
+param vnetResourceGroupName string 
 param vnetName string
 param subnetName string
+@allowed([
+  'azure'
+  'kubenet'
+])
+param networkPlugin string = 'azure'
+param networkPluginMode string
+param networkPolicy string
+param outboundType string
+param serviceCidr string = '10.240.0.0/16'
+param dnsServiceIP string = '10.240.0.10'
+param skuTier string
+param podCidr string
+
+
 @secure()
 param aksadminaccessprincipalId string
 param kubernetesVersion string
@@ -22,36 +41,23 @@ param userNodePoolSettings object
 @description('The node pool settings for the cluster system node pool.')
 param systemNodePoolSettings object
 
-@allowed([
-  'azure'
-  'kubenet'
-])
-param networkPlugin string = 'azure'
-param networkPluginMode string
-param networkPolicy string
-param outboundType string
-param serviceCidr string = '10.240.0.0/16'
-param dnsServiceIP string = '10.240.0.10'
-param skuTier string
-param podCidr string
-
 var suffix = uniqueString(resourceGroup().id)
-var clusterName = 'eshop-dev-eastus-aks-${suffix}'
+var clusterName = 'aks-${suffix}-stable'
 
 resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' existing = {
-  name: rgName
+  name: resourceGroupName
   scope: subscription()
 }
 
-var aksSubnetId = resourceId(rgName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, subnetName)
-
+//get the subnet Id using the vnetname and subnet name
+var aksSubnetId = resourceId(vnetResourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, subnetName)
 
 resource akslaworkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
-  scope: resourceGroup(lawRgName)
-  name: akslaWorkspaceName
+  scope: resourceGroup(lawResourceGroupName)
+  name: lawName
 }
 
-module aksCluster 'modules/aks/aks.bicep' = {
+module aksCluster '../../modules/aks/aks.bicep' = {
   scope: resourceGroup(rg.name)
   name: 'aksClustereastus'
   params: {
@@ -79,13 +85,14 @@ module aksCluster 'modules/aks/aks.bicep' = {
     identity: {
       type: 'SystemAssigned'
     }
-    skuTier: skuTier
-    tags: tags
+   //sku configuration
+   skuTier: skuTier
+   tags: tags
   }
 }
 
 //add default worker pool
-module aksWorkerPool 'modules/aks/aksNodePool.bicep' = {
+module aksWorkerPool '../../modules/aks/aksNodePool.bicep' = {
   name: 'aksWorkerPool'
   scope: resourceGroup(rg.name)
   params: {

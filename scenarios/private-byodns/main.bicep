@@ -31,23 +31,6 @@ param byoDns bool = true
 param dnsResourceGroupName string
 @description('The existing private dns zone')
 param privateDNSZoneAKSName string
-@description('Whether you need to vnet integration to access the API Sever: Preview')
-param enableVnetIntegration bool = false
-@description('The subnet that should be delated to AKS for vnet integration')
-param apiServerSubnetName string =''
-@description('Whether to enable advancedNetworking')
-param advancedNetworkingEnabled bool = false
-
-//Ingress Configuration
-@description('Whether to enable the Web App Routing feature')
-param webAppRoutingEnabled bool = false
-@description('The ingress type to be used with Web App Routing')
-@allowed([
-  'Internal'
-  'External'
-])
-param webAppRoutingIngressType string = 'Internal'
-
 
 
 @secure()
@@ -69,9 +52,6 @@ param systemNodePoolSettings object
 param existingIdentityName string = ''
 param identityResourceGroupName string = ''
 param identitySubscriptionId string = ''
-
-
-
 
 var suffix = uniqueString(resourceGroup().id)
 var clusterName = 'aks-${suffix}-cluster'
@@ -117,9 +97,6 @@ resource pvtdnsAKSZone 'Microsoft.Network/privateDnsZones@2020-06-01' existing =
 //get the subnet Id using the vnetname and subnet name
 var aksSubnetId = resourceId(vnetResourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, subnetName)
 
-var apiServerSubnetId = resourceId(vnetResourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, apiServerSubnetName)
-
-
 resource akslaworkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
   scope: resourceGroup(lawResourceGroupName)
   name: lawName
@@ -159,14 +136,6 @@ module aksCluster '../../modules/aks/aks.bicep' = {
   
    byoDns: byoDns
    privateDNSZone: pvtdnsAKSZone.id
-   enableVnetIntegration: enableVnetIntegration
-   //apiServerSubnetId: apiServerSubnetId
-   advancedNetworkingEnabled: advancedNetworkingEnabled
-
-   //ingress
-   webAppRoutingEnabled: webAppRoutingEnabled
-   webAppRoutingIngressType: webAppRoutingIngressType
-
    //sku configuration
    skuTier: skuTier
    tags: tags

@@ -3,13 +3,16 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
-            "value": "eastus"
+            "value": "centralus"
         },
-        "rgName": {
-            "value": "aks-rg"
+        "resourceGroupName": {
+            "value": "aks-playground-centralus-eshop-dev-rg"
+        },
+        "vnetResourceGroupName": {
+            "value": "aks-playground-centralus-eshop-dev-rg"
         },
         "vnetName": {
-            "value": "aks-vnet"
+            "value": "aks-playground-centralus-eshop-dev-vnet"
         },
         "subnetName": {
             "value": "sn-aks"
@@ -39,7 +42,7 @@
             "value": "10.248.0.0/16"
         },
         "kubernetesVersion": {
-            "value": "1.28.3"
+            "value": "1.30.0"
         },
         "availabilityZones": {
             "value": [
@@ -48,36 +51,34 @@
                 "3"
             ]
         },
-        "lawRgName": {
-            "value": "law-rg"
+        "lawResourceGroupName": {
+            "value": "aks-playground-centralus-hub-rg"
         },
-        "akslaWorkspaceName": {
-            "value": "law-name"
+        "lawName": {
+            "value": "aks-playground-centralus-hub-law"
         },
         "userNodePoolSettings": {
-            "value": 
-                {
-                    "minCount": 2,
-                    "maxCount": 10,
-                    "nodeCount": 3,
-                    "poolVMSize": "Standard_D2s_v3"
-                }
+            "value": {
+                "minCount": 2,
+                "maxCount": 10,
+                "nodeCount": 3,
+                "poolVMSize": "Standard_D2s_v3"
+            }
         },
         "systemNodePoolSettings": {
-            "value": 
-                {
-                    "minCount": 2,
-                    "maxCount": 5,
-                    "nodeCount": 2,
-                    "poolVMSize": "Standard_D4d_v5"
-                }
+            "value": {
+                "minCount": 2,
+                "maxCount": 5,
+                "nodeCount": 2,
+                "poolVMSize": "Standard_D2s_v3"
+            }
         },
         "tags": {
             "value": {
-                "Company": "AKS-Playground"
+                "Environment": "Development"
             }
         },
-        "aksadminaccessprincipalId":{
+        "aksadminaccessprincipalId": {
             "value": "00000000-0000-0000-0000-000000000000"
         }
     }

@@ -27,7 +27,7 @@
             "value": "calico"
         },
         "outboundType": {
-            "value": "userDefinedRouting"
+            "value": "loadBalancer"
         },
         "serviceCidr": {
             "value": "10.240.0.0/16"
@@ -40,9 +40,6 @@
         },
         "podCidr": {
             "value": "10.248.0.0/16"
-        },
-        "apiServerSubnetName": {
-            "value": "myApiServerSubnet"
         },
         "kubernetesVersion": {
             "value": "1.30.0"
@@ -87,9 +84,6 @@
         "byoDns": {
             "value": true
         },
-        "enableVnetIntegration": {
-            "value": false
-        },
         "dnsResourceGroupName": {
             "value": "aks-playground-centralus-hub-rg"
         },
@@ -100,19 +94,10 @@
             "value": "aks-clusters-identity"
         },
         "identityResourceGroupName": {
-            "value": "aks-playground-centralus-eshop-dev-rg"
+            "value": "aks-demos"
         },
         "identitySubscriptionId": {
             "value": "00000000-0000-0000-0000-000000000000"
-        },
-        "advancedNetworkingEnabled": {
-            "value": false
-        },
-        "webAppRoutingEnabled" :  {
-            "value": false
-        },
-        "webAppRoutingIngressType" : {
-            "value": "Internal"
         }
     }
 }
