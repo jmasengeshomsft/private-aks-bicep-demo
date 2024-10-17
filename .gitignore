@@ -1,0 +1,2 @@
+# Ignore all parameters.json files under scenarios folders
+scenarios/**/parameters.json

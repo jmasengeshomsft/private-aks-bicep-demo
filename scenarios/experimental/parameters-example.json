@@ -1,0 +1,118 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "centralus"
+        },
+        "resourceGroupName": {
+            "value": "aks-playground-centralus-eshop-dev-rg"
+        },
+        "vnetResourceGroupName": {
+            "value": "aks-playground-centralus-eshop-dev-rg"
+        },
+        "vnetName": {
+            "value": "aks-playground-centralus-eshop-dev-vnet"
+        },
+        "subnetName": {
+            "value": "sn-aks"
+        },
+        "networkPlugin": {
+            "value": "azure"
+        },
+        "networkPluginMode": {
+            "value": "overlay"
+        },
+        "networkPolicy": {
+            "value": "calico"
+        },
+        "outboundType": {
+            "value": "loadBalancer"
+        },
+        "serviceCidr": {
+            "value": "10.240.0.0/16"
+        },
+        "dnsServiceIP": {
+            "value": "10.240.0.10"
+        },
+        "skuTier": {
+            "value": "Standard"
+        },
+        "podCidr": {
+            "value": "10.248.0.0/16"
+        },
+        "apiServerSubnetName": {
+            "value": "sn-apim"
+        },
+        "kubernetesVersion": {
+            "value": "1.30.0"
+        },
+        "availabilityZones": {
+            "value": [
+                "1",
+                "2",
+                "3"
+            ]
+        },
+        "lawResourceGroupName": {
+            "value": "aks-playground-centralus-hub-rg"
+        },
+        "lawName": {
+            "value": "aks-playground-centralus-hub-law"
+        },
+        "userNodePoolSettings": {
+            "value": {
+                "minCount": 2,
+                "maxCount": 10,
+                "nodeCount": 3,
+                "poolVMSize": "Standard_D2s_v3"
+            }
+        },
+        "systemNodePoolSettings": {
+            "value": {
+                "minCount": 2,
+                "maxCount": 5,
+                "nodeCount": 2,
+                "poolVMSize": "Standard_D2s_v3"
+            }
+        },
+        "tags": {
+            "value": {
+                "Environment": "Development"
+            }
+        },
+        "aksadminaccessprincipalId": {
+            "value": "00000000-0000-0000-0000-000000000000"
+        },
+        "byoDns": {
+            "value": true
+        },
+        "enableVnetIntegration": {
+            "value": true
+        },
+        "dnsResourceGroupName": {
+            "value": "aks-playground-centralus-hub-rg"
+        },
+        "privateDNSZoneAKSName": {
+            "value": "privatelink.centralus.azmk8s.io"
+        },
+        "existingIdentityName": {
+            "value": "aks-clusters-identity"
+        },
+        "identityResourceGroupName": {
+            "value": "aks-demos"
+        },
+        "identitySubscriptionId": {
+            "value": "00000000-0000-0000-0000-000000000000"
+        },
+        "advancedNetworkingEnabled": {
+            "value": true
+        },
+        "webAppRoutingEnabled" :  {
+            "value": true
+        },
+        "webAppRoutingIngressType" : {
+            "value": "Internal"
+        }
+    }
+}
