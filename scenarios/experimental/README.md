@@ -1,4 +1,3 @@
-```markdown
 # Experimental AKS Deployment Scenario
 
 This folder contains Bicep templates and parameter files for deploying an experimental Azure Kubernetes Service (AKS) cluster. This deployment includes advanced configurations such as private API server access, Bring Your Own DNS (BYO DNS), auto-scaling, and several preview features.
