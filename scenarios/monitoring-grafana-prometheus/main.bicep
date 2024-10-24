@@ -23,14 +23,7 @@ param serviceCidr string = '10.240.0.0/16'
 param dnsServiceIP string = '10.240.0.10'
 param skuTier string
 param podCidr string
-
-//api Server Access Profile
-@description('Whether you need to use a pre-existing dns zone')
-param byoDns bool = true
-@description('The resource group for the existing private dns zone')
-param dnsResourceGroupName string
-@description('The existing private dns zone')
-param privateDNSZoneAKSName string
+param enablePrivateCluster bool = false
 
 
 @secure()
@@ -43,88 +36,32 @@ param availabilityZones array = [
   '3'
 ]
 
-@description('The node pool settings for the cluster user nodepool.')
+// @description('The node pool settings for the cluster user nodepool.')
 param userNodePoolSettings object
 
 @description('The node pool settings for the cluster system node pool.')
 param systemNodePoolSettings object
 
-param identityName string = ''
-param identityResourceGroupName string = ''
-param identitySubscriptionId string = ''
-param createNewIdentity bool = true
-param nvaNextHopIAddressIp string 
-
+//Monitoring
+param enablePrometheusGrafana bool = true
+param enablePrometheusRecommendedAlerts  bool = true
+param grafanaName string 
+param grafanaResourceGroupName string 
+param prometheusResourceName string 
+param prometheusResourceGroupName string 
 
 var suffix = uniqueString(resourceGroup().id)
-var clusterName = 'aks-${suffix}-dns-byo'
+var clusterName = 'aks-${suffix}-mon'
 
-resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' existing = {
+resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' existing = {
   name: resourceGroupName
   scope: subscription()
-}
-
-
-// Networking
-module networking 'networking.bicep' = {
-  name: 'networking'
-  scope: resourceGroup(vnetResourceGroupName)
-  params: {
-    routeTableName: '${clusterName}-udr'
-    location: location
-    vnetName: vnetName
-    subnetName: 'aks-subnet-2'
-    addressPrefix: '10.128.1.160/27'
-    nvaNextHopIAddressIp: nvaNextHopIAddressIp
-    tags: tags
-  }
-}
-
-// //AKS Identity
-module aksIdentity 'identity.bicep' = {
-  name: 'aksIdentity'
-  scope: resourceGroup(identitySubscriptionId, identityResourceGroupName)
-  params: {
-    createNewIdentity: createNewIdentity
-    identityName: identityName
-    identityResourceGroupName: identityResourceGroupName
-    identitySubscriptionId: identitySubscriptionId
-  }
-}
-//Add networking components here
-
-
-resource pvtdnsAKSZone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
-  scope: resourceGroup(dnsResourceGroupName)
-  name: privateDNSZoneAKSName
-}
-
-
-// // //aks vnet write role
-module aksPvtDNSContrib '../../modules/dnsContributorRole.bicep' = if(createNewIdentity) {
-  scope: resourceGroup(dnsResourceGroupName)
-  name: 'aksPvtDNSContrib'
-  params: {
-    principalId: aksIdentity.outputs.principalId
-    roleGuid: 'b12aa53e-6015-4669-85d0-8515ebb3ae7f' //Private DNS Zone Contributor
-    pvtdnsAKSZoneName: privateDNSZoneAKSName
-  }
-}
-
-module vnetConrib '../../modules/vnetContributorRole.bicep' = if(createNewIdentity) {
-  scope: resourceGroup(vnetResourceGroupName)
-  name: 'vnetContrib'
-  params: {
-    principalId: aksIdentity.outputs.principalId
-    roleGuid: '4d97b98b-1d4f-4787-a291-c67834d212e7' //vnet Contributor
-    vnetName: vnetName
-  }
 }
 
 //get the subnet Id using the vnetname and subnet name
 var aksSubnetId = resourceId(vnetResourceGroupName, 'Microsoft.Network/virtualNetworks/subnets', vnetName, subnetName)
 
-resource akslaworkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
+resource akslaworkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
   scope: resourceGroup(lawResourceGroupName)
   name: lawName
 }
@@ -148,19 +85,16 @@ module aksCluster '../../modules/aks/aks.bicep' = {
     serviceCidr: serviceCidr
     dnsServiceIP: dnsServiceIP
     podCidr: podCidr
-    enablePrivateCluster: true
+    enablePrivateCluster: enablePrivateCluster
     logworkspaceid: akslaworkspace.id
-    subnetId: networking.outputs.subnetId
+    subnetId: aksSubnetId
     minNodeCount: systemNodePoolSettings.minCount
     maxNodeCount: systemNodePoolSettings.maxCount
     nodeCount: systemNodePoolSettings.nodeCount
     systemNodePoolVMSize: systemNodePoolSettings.poolVMSize
     identity: {
-      '${aksIdentity.outputs.identityId}': {}
+      type: 'SystemAssigned'
     }
-   byoDns: byoDns
-   privateDNSZone: pvtdnsAKSZone.id
-   //sku configuration
    skuTier: skuTier
    tags: tags
   }
@@ -193,3 +127,30 @@ module aksWorkerPool '../../modules/aks/aksNodePool.bicep' = {
     aksCluster
   ]
 }
+
+module aksPrometheusCollector '../../modules/aks/aks-prometheus-collector/main.bicep' =  if (enablePrometheusGrafana) {
+  name: 'aksPrometheusCollector'
+  scope: resourceGroup(rg.name)
+  params: {
+    clusterName: clusterName
+    grafanaName: grafanaName
+    grafanaResourceGroupName: grafanaResourceGroupName
+    amwName: prometheusResourceName
+    amwResourceGroupName: prometheusResourceGroupName
+    location: location
+    adminGroupObjectId: aksadminaccessprincipalId
+    alertActionGroupName: 'AKS-PLYGRND-ALERTS'
+    enablePrometheusRecommendedAlerts: enablePrometheusRecommendedAlerts
+  }
+  dependsOn: [
+    aksCluster
+  ]
+}
+
+
+
+
+//Enable Recommended alerts
+
+
+//sample metric alert

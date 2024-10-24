@@ -23,7 +23,7 @@ param serviceCidr string = '10.240.0.0/16'
 param dnsServiceIP string = '10.240.0.10'
 param skuTier string
 param podCidr string
-
+param enablePrivateCluster bool = true
 
 @secure()
 param aksadminaccessprincipalId string
@@ -76,6 +76,7 @@ module aksCluster '../../modules/aks/aks.bicep' = {
     serviceCidr: serviceCidr
     dnsServiceIP: dnsServiceIP
     podCidr: podCidr
+    enablePrivateCluster: enablePrivateCluster
     logworkspaceid: akslaworkspace.id
     subnetId: aksSubnetId
     minNodeCount: systemNodePoolSettings.minCount

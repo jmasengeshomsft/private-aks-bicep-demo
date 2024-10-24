@@ -11,6 +11,7 @@ param availabilityZones array = [
 param identity object = {}
 param privateDNSZone string = 'system'
 param byoDns bool = false
+param enablePrivateCluster bool = true
 
 param maxNodeCount int
 param minNodeCount int
@@ -84,9 +85,9 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-06-02-previ
       podCidr: '10.248.0.0/16'
     }
     apiServerAccessProfile: {
-      enablePrivateCluster: true
+      enablePrivateCluster: enablePrivateCluster
       enablePrivateClusterPublicFQDN: false
-      privateDNSZone: byoDns ?  privateDNSZone : 'system'
+      privateDNSZone: enablePrivateCluster ?  privateDNSZone : null
     }
     enableRBAC: true
     // fqdnSubdomain: 'dev'

@@ -9,6 +9,7 @@ param availabilityZones array = [
   '3'
 ]
 param identity object = {}
+param enablePrivateCluster bool = true
 param privateDNSZone string = 'system'
 param byoDns bool = true
 param enableVnetIntegration bool = false
@@ -103,7 +104,7 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-06-02-previ
       }
     }
     apiServerAccessProfile: {
-      enablePrivateCluster: true
+      enablePrivateCluster: enablePrivateCluster
       enablePrivateClusterPublicFQDN: false
       privateDNSZone: byoDns ?  privateDNSZone : 'system'
       enableVnetIntegration: enableVnetIntegration
@@ -160,35 +161,35 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2024-06-02-previ
       }
     }
 
-    // azureMonitorProfile: {
-    //   appMonitoring: {
-    //     autoInstrumentation: {
-    //       enabled: true
-    //     }
-    //     openTelemetryLogs: {
-    //       enabled: true
-    //       port: 28331
-    //     }
-    //     openTelemetryMetrics: {
-    //       enabled: true
-    //       port: 28333
-    //     }
-    //   }
-    //   containerInsights: {
-    //     disableCustomMetrics: false
-    //     disablePrometheusMetricsScraping: false
-    //     enabled: true
-    //     logAnalyticsWorkspaceResourceId: logworkspaceid
-    //     syslogPort: 28330
-    //   }
-    //   metrics: {
-    //     enabled: true
-    //     // kubeStateMetrics: {
-    //     //   metricAnnotationsAllowList: 'string'
-    //     //   metricLabelsAllowlist: 'string'
-    //     // }
-    //   }
-    // }
+    azureMonitorProfile: {
+      // appMonitoring: {
+      //   autoInstrumentation: {
+      //     enabled: true
+      //   }
+      //   openTelemetryLogs: {
+      //     enabled: true
+      //     port: 28331
+      //   }
+      //   openTelemetryMetrics: {
+      //     enabled: true
+      //     port: 28333
+      //   }
+      // }
+      containerInsights: {
+        disableCustomMetrics: false
+        disablePrometheusMetricsScraping: false
+        enabled: false
+        logAnalyticsWorkspaceResourceId: logworkspaceid
+        syslogPort: 28330
+      }
+      metrics: {
+        enabled: true
+        // kubeStateMetrics: {
+        //   metricAnnotationsAllowList: 'string'
+        //   metricLabelsAllowlist: 'string'
+        // }
+      }
+    }
   }
   tags: tags
   sku: {
